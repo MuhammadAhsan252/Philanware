@@ -1,0 +1,67 @@
+---
+layout: "default"
+---
+
+<section class="content-section" style="padding-top: 120px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <article>
+                    <div class="mb-4">
+                        <a href="{{ 'blog' | relative_url }}" class="text-muted"><i class="fas fa-arrow-left me-2"></i>Back to Blog</a>
+                    </div>
+                    
+                    <header class="mb-4">
+                        <h1 class="display-5 fw-bold mb-3">{{ page.title }}</h1>
+                        <div class="blog-meta mb-4">
+                            <span class="me-4"><i class="far fa-calendar me-2"></i>{{ page.date | date: "%-d %B %Y" }}</span>
+                            <span><i class="fas fa-tag me-2"></i>{{ page.categories }}</span>
+                        </div>
+                    </header>
+
+                    <img src="{{ 'assets/img/blogs/' | append: page.image | relative_url }}" alt="{{ page.title }}" class="img-fluid rounded-4 shadow mb-4">
+
+                    <div class="content">
+                        <p>{{ content }}</p>
+                    </div>
+                </article>
+
+                <!-- Social Share -->
+                <div class="mt-5 pt-4 border-top">
+                    <h5 class="mb-3">Share this article</h5>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-outline-primary btn-sm"><i class="fab fa-facebook-f me-1"></i>Facebook</a>
+                        <a href="#" class="btn btn-outline-info btn-sm"><i class="fab fa-twitter me-1"></i>Twitter</a>
+                        <a href="#" class="btn btn-outline-primary btn-sm"><i class="fab fa-linkedin-in me-1"></i>LinkedIn</a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm"><i class="fas fa-link me-1"></i>Copy Link</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+
+                <div class="side-card mt-4">
+                    <h5 class="mb-4">Related Articles</h5>
+                    {% for post in site.posts limit:5 %}
+                        <div class="mb-3 pb-3 border-bottom">
+                            <h6><a href="{{ post.url | relative_url }}" class="text-decoration-none">{{ post.title }}</a></h6>
+                            <small class="text-muted">{{ post.date | date: "%-d %B %Y" }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="side-card mt-4">
+                    <h5 class="mb-3">Newsletter</h5>
+                    <p>Stay updated with the latest insights and trends in software development.</p>
+                    <form>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Your email address" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
