@@ -223,7 +223,7 @@ Build relationships with individual donors through personal cultivation, communi
 
 Ensure all fundraising activities comply with California and federal requirements, including proper acknowledgment of donations and reporting requirements.
 
-##### Ongoing Compliance Requirements
+### Ongoing Compliance Requirements
 
 Maintaining nonprofit status requires ongoing compliance with various requirements.
 
@@ -243,7 +243,7 @@ Maintain proper corporate records including board meeting minutes, financial rec
 
 Follow all applicable employment laws regarding wages, benefits, discrimination, and workplace safety.
 
-##### Common Challenges and How to Avoid Them
+### Common Challenges and How to Avoid Them
 
 Starting a nonprofit involves several potential pitfalls that can be avoided with proper planning.
 
@@ -263,7 +263,7 @@ Poor financial management leads to compliance problems and loss of tax-exempt st
 
 Organizations may stray from their original mission without proper governance. Regular strategic planning and board oversight help maintain focus.
 
-##### Resources and Professional Assistance
+### Resources and Professional Assistance
 
 Consider seeking professional help for complex aspects of nonprofit formation.
 
