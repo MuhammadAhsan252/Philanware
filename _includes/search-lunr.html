@@ -1,0 +1,380 @@
+<script src="/assets/js/lunr.js"></script>
+
+<script>
+{% assign counter = 0 %}
+var documents = [{% for page in site.pages %}{% if page.url contains '.xml' or page.url contains 'assets' %}{% else %}{
+    "id": {{ counter }},
+    "url": "{{ site.url }}{{ page.url }}",
+    "title": "{{ page.title }}",
+    "body": "{{ page.content | markdownify | replace: '.', '. ' | replace: '</h2>', ': ' | replace: '</h3>', ': ' | replace: '</h4>', ': ' | replace: '</p>', ' ' | strip_html | strip_newlines | replace: '  ', ' ' | replace: '"', ' ' }}"{% assign counter = counter | plus: 1 %}
+    }, {% endif %}{% endfor %}{% for page in site.without-plugin %}{
+    "id": {{ counter }},
+    "url": "{{ site.url }}{{ page.url }}",
+    "title": "{{ page.title }}",
+    "body": "{{ page.content | markdownify | replace: '.', '. ' | replace: '</h2>', ': ' | replace: '</h3>', ': ' | replace: '</h4>', ': ' | replace: '</p>', ' ' | strip_html | strip_newlines | replace: '  ', ' ' | replace: '"', ' ' }}"{% assign counter = counter | plus: 1 %}
+    }, {% endfor %}{% for page in site.posts %}{
+    "id": {{ counter }},
+    "url": "{{ site.url }}{{ page.url }}",
+    "title": "{{ page.title }}",
+    "body": "{{ page.date | date: "%Y/%m/%d" }} - {{ page.content | markdownify | replace: '.', '. ' | replace: '</h2>', ': ' | replace: '</h3>', ': ' | replace: '</h4>', ': ' | replace: '</p>', ' ' | strip_html | strip_newlines | replace: '  ', ' ' | replace: '"', ' ' }}"{% assign counter = counter | plus: 1 %}
+    }{% if forloop.last %}{% else %}, {% endif %}{% endfor %}];
+
+var idx = lunr(function () {
+    this.ref('id')
+    this.field('title')
+    this.field('body')
+
+    documents.forEach(function (doc) {
+        this.add(doc)
+    }, this)
+});
+function lunr_search(term) {
+    var resultsContainer = document.getElementById('lunrsearchresults');
+    var resultsList = resultsContainer.querySelector('.search-results-list');
+    
+    // Clear previous results
+    resultsContainer.innerHTML = '<div class="container"><div class="row"><div class="col-12"><ul class="search-results-list"></ul></div></div></div>';
+    resultsList = resultsContainer.querySelector('.search-results-list');
+    
+    if(term && term.trim()) {
+        // Show loading state
+        resultsList.innerHTML = '<div class="search-loading"><div class="search-spinner"></div>Searching...</div>';
+        
+        // Small delay to show loading state
+        setTimeout(function() {
+            // Add search header
+            var headerHtml = '<div class="search-results-header"><i class="fas fa-search me-2"></i>Search results for "' + term + '"</div>';
+            resultsList.insertAdjacentHTML('beforebegin', headerHtml);
+            
+            // Perform search
+            var results = idx.search(term);
+            resultsList.innerHTML = '';
+            
+            if(results.length > 0) {
+                // Display results count
+                var countHtml = '<div class="mb-3"><small class="text-muted">Found ' + results.length + ' result' + (results.length > 1 ? 's' : '') + '</small></div>';
+                resultsList.insertAdjacentHTML('beforebegin', countHtml);
+                
+                // Add results
+                for (var i = 0; i < results.length; i++) {
+                    var ref = results[i]['ref'];
+                    var url = documents[ref]['url'];
+                    var title = documents[ref]['title'];
+                    var body = documents[ref]['body'].substring(0, 200) + '...';
+                    
+                    // Clean up the URL for display
+                    var displayUrl = url.replace('{{ site.url }}', '').replace('//', '/');
+                    
+                    var resultHtml = 
+                        '<li class="lunrsearchresult">' +
+                            '<a href="' + url + '">' +
+                                '<div class="title">' + title + '</div>' +
+                                '<div class="body">' + body + '</div>' +
+                                '<div class="url">' + displayUrl + '</div>' +
+                            '</a>' +
+                        '</li>';
+                    
+                    resultsList.innerHTML += resultHtml;
+                }
+            } else {
+                // No results found
+                resultsList.innerHTML = 
+                    '<div class="no-results">' +
+                        '<div class="no-results-icon">🔍</div>' +
+                        '<p class="no-results-text">No results found for "' + term + '". Try different keywords or check your spelling.</p>' +
+                    '</div>';
+            }
+        }, 300);
+    }
+    return false;
+}
+
+// Add real-time search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    var searchInput = document.getElementById('lunrsearch');
+    if (searchInput) {
+        var searchTimeout;
+        
+        // Clear results when input is empty
+        searchInput.addEventListener('input', function() {
+            var term = this.value.trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (term === '') {
+                document.getElementById('lunrsearchresults').innerHTML = '<div class="container"><div class="row"><div class="col-12"><ul class="search-results-list"></ul></div></div></div>';
+            } else if (term.length > 2) {
+                // Real-time search with debouncing
+                searchTimeout = setTimeout(function() {
+                    lunr_search(term);
+                }, 500);
+            }
+        });
+        
+        // Handle keyboard shortcuts
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                this.blur();
+                document.getElementById('lunrsearchresults').innerHTML = '<div class="container"><div class="row"><div class="col-12"><ul class="search-results-list"></ul></div></div></div>';
+            }
+        });
+    }
+});
+</script>
+<style>
+    /* Search Container */
+    .search-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    /* Search Form */
+    .search-form {
+        position: relative;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        background: #fff;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #4F46E5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        transform: translateY(-1px);
+    }
+    
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 1.1rem;
+        pointer-events: none;
+    }
+    
+    .search-button {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #4F46E5, #7C3AED);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .search-button:hover {
+        background: linear-gradient(135deg, #3730A3, #6D28D9);
+        transform: translateY(-50%) translateY(-1px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+    
+    /* Search Results */
+    #lunrsearchresults {
+        margin-top: 2rem;
+    }
+    
+    .search-results-header {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    
+    .search-results-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .lunrsearchresult {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .lunrsearchresult:hover {
+        border-color: #4F46E5;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .lunrsearchresult a {
+        display: block;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .lunrsearchresult a:hover {
+        text-decoration: none;
+    }
+    
+    .lunrsearchresult .title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+        background: linear-gradient(135deg, #4F46E5, #7C3AED);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .lunrsearchresult:hover .title {
+        text-decoration: underline;
+    }
+    
+    .lunrsearchresult .body {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .lunrsearchresult .url {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .lunrsearchresult .url::before {
+        content: "🔗";
+        margin-right: 0.5rem;
+    }
+    
+    /* No Results State */
+    .no-results {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .no-results-icon {
+        font-size: 3rem;
+        color: #94a3b8;
+        margin-bottom: 1rem;
+    }
+    
+    .no-results-text {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+    
+    /* Loading State */
+    .search-loading {
+        text-align: center;
+        padding: 2rem;
+        color: #64748b;
+    }
+    
+    .search-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #e2e8f0;
+        border-radius: 50%;
+        border-top-color: #4F46E5;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 0.5rem;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .search-container {
+            padding: 1.5rem 1rem;
+            margin: 0 -1rem 2rem;
+            border-radius: 0;
+        }
+        
+        .search-input {
+            font-size: 1rem;
+            padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+        }
+        
+        .search-button {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .lunrsearchresult a {
+            padding: 1rem;
+        }
+        
+        .lunrsearchresult .title {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+<!-- Search Section -->
+<div class="search-container">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <form class="search-form" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+                    <div class="position-relative">
+                        <i class="fas fa-search search-icon"></i>
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="lunrsearch" 
+                            name="q" 
+                            maxlength="255" 
+                            value="" 
+                            placeholder="Search articles, tutorials, and insights..." 
+                            autocomplete="off"
+                        />
+                        <button type="submit" class="search-button">
+                            <i class="fas fa-search me-1"></i>Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Results -->
+<div id="lunrsearchresults">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <ul class="search-results-list"></ul>
+            </div>
+        </div>
+    </div>
+</div>
