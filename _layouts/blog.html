@@ -18,7 +18,7 @@ layout: "default"
 <section class="content-section">
     <div class="container">
         <div class="row g-4">
-            {% for post in site.posts %}
+            {% for post in paginator.posts %}
                 <div class="col-lg-4 col-md-6">
                     <div class="blog-card">
                         <img src="{{ 'assets/img/blogs/' | append: post.image | relative_url }}" alt="{{ post.title }}">
@@ -37,3 +37,67 @@ layout: "default"
         </div>
     </div>
 </section>
+
+{% if paginator.total_pages > 1 %}
+<!-- Pagination -->
+<section class="pagination-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="Blog pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if paginator.previous_page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ paginator.previous_page_path | prepend: site.baseurl }}" aria-label="Previous">
+                                <i class="fas fa-chevron-left me-1"></i> Newer Posts
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link"><i class="fas fa-chevron-left me-1"></i> Newer Posts</span>
+                        </li>
+                        {% endif %}
+                        
+                        <!-- Page numbers -->
+                        {% for page in (1..paginator.total_pages) %}
+                            {% if page == paginator.page %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{ page }}</span>
+                            </li>
+                            {% elsif page == 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ '/blog/' | relative_url }}">{{ page }}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ '/blog/page/' | append: page | append: '/' | relative_url }}">{{ page }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if paginator.next_page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ paginator.next_page_path | prepend: site.baseurl }}" aria-label="Next">
+                                Older Posts <i class="fas fa-chevron-right ms-1"></i>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Older Posts <i class="fas fa-chevron-right ms-1"></i></span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                
+                <!-- Pagination info -->
+                <div class="pagination-info text-center mt-3">
+                    <small class="text-muted">
+                        Page {{ paginator.page }} of {{ paginator.total_pages }} 
+                        ({{ paginator.total_posts }} total posts)
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
