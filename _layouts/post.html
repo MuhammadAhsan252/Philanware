@@ -41,14 +41,9 @@ layout: "default"
             <!-- Sidebar -->
             <div class="col-lg-4">
 
-                <div class="side-card mt-4">
-                    <h5 class="mb-4">Related Articles</h5>
-                    {% for post in site.posts limit:5 %}
-                        <div class="mb-3 pb-3 border-bottom">
-                            <h6><a href="{{ post.url | relative_url }}" class="text-decoration-none">{{ post.title }}</a></h6>
-                            <small class="text-muted">{{ post.date | date: "%-d %B %Y" }}</small>
-                        </div>
-                    {% endfor %}
+                <div class="side-card mt-4" style="text-align: left;">
+                    <h5 class="mb-4">Table of Content</h5>
+                    {% toc %}
                 </div>
 
                 <div class="side-card mt-4">
@@ -62,6 +57,44 @@ layout: "default"
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Articles -->
+<section class="content-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center mb-5">Related Articles</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% assign related_posts = site.posts | where_exp: "post", "post.categories == page.categories and post.url != page.url" %}
+            {% if related_posts.size > 0 %}
+                {% for post in related_posts limit:3 %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="blog-card">
+                            <img src="{{ 'assets/img/blogs/' | append: post.image | relative_url }}" alt="{{ post.title }}">
+                            <div class="blog-card-body">
+                                <div class="blog-meta">
+                                    <span><i class="far fa-calendar me-1"></i>{{ post.date | date: "%-d %B %Y" }}</span>
+                                    <span class="ms-3"><i class="far fa-tag me-1"></i>{{ post.categories }}</span>
+                                </div>
+                                <h5>{{ post.title }}</h5>
+                                <a href="{{ post.url | relative_url }}" class="service-link">Read More <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <p class="text-muted">No related articles found in this category.</p>
+                        <a href="{{ '/blog/' | relative_url }}" class="btn btn-primary">Browse All Articles</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 </section>

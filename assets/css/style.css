@@ -722,3 +722,11 @@
       padding: 3rem 0 1.5rem;
     }
   }
+
+.toc-entry{
+  font-size: 0.9rem;
+  list-style: none;
+}
+.section-nav{
+  padding-left: 0;
+}

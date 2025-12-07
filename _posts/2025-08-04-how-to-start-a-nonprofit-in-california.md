@@ -5,6 +5,7 @@ date:   2025-08-04 12:53:54 +0500
 categories: Nonprofit
 image: nonprofit_in_california.jpg
 excerpt: Starting a nonprofit organization in California requires careful planning, legal compliance, and strategic thinking.
+toc: true
 ---
 
 Starting a nonprofit organization in California requires careful planning, legal compliance, and strategic thinking. This comprehensive guide walks you through each step of the process, from initial concept to operational nonprofit status.
