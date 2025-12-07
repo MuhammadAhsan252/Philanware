@@ -21,8 +21,12 @@ var documents = [{% for page in site.pages %}{% if page.url contains '.xml' or p
 
 var idx = lunr(function () {
     this.ref('id')
-    this.field('title')
+    this.field('title', { boost: 10 })
     this.field('body')
+    
+    // Add custom pipeline function to preserve phrases
+    this.pipeline.remove(lunr.stemmer);
+    this.searchPipeline.remove(lunr.stemmer);
 
     documents.forEach(function (doc) {
         this.add(doc)
@@ -46,8 +50,80 @@ function lunr_search(term) {
             var headerHtml = '<div class="search-results-header"><i class="fas fa-search me-2"></i>Search results for "' + term + '"</div>';
             resultsList.insertAdjacentHTML('beforebegin', headerHtml);
             
-            // Perform search
-            var results = idx.search(term);
+            // Perform search with multiple strategies
+            var results = [];
+            
+            // Strategy 1: Exact phrase search (with quotes)
+            try {
+                var exactResults = idx.search('"' + term + '"');
+                results = results.concat(exactResults);
+            } catch (e) {}
+            
+            // Strategy 2: Wildcard search for partial matches
+            try {
+                var wildcardResults = idx.search(term + '*');
+                results = results.concat(wildcardResults);
+            } catch (e) {}
+            
+            // Strategy 3: Fuzzy search for typos
+            try {
+                var fuzzyResults = idx.search(term + '~1');
+                results = results.concat(fuzzyResults);
+            } catch (e) {}
+            
+            // Strategy 4: Individual word search
+            try {
+                var wordResults = idx.search(term);
+                results = results.concat(wordResults);
+            } catch (e) {}
+            
+            // Strategy 5: Manual content search for phrases not caught by Lunr
+            var manualResults = [];
+            var searchTermLower = term.toLowerCase();
+            
+            documents.forEach(function(doc, index) {
+                var titleLower = doc.title.toLowerCase();
+                var bodyLower = doc.body.toLowerCase();
+                
+                if (titleLower.includes(searchTermLower) || bodyLower.includes(searchTermLower)) {
+                    // Check if this result is already in our results
+                    var alreadyExists = results.some(function(result) {
+                        return result.ref == index;
+                    });
+                    
+                    if (!alreadyExists) {
+                        var score = 0;
+                        if (titleLower.includes(searchTermLower)) score += 2;
+                        if (bodyLower.includes(searchTermLower)) score += 1;
+                        
+                        manualResults.push({
+                            ref: index,
+                            score: score
+                        });
+                    }
+                }
+            });
+            
+            // Combine all results and remove duplicates
+            results = results.concat(manualResults);
+            
+            // Remove duplicates and sort by score
+            var uniqueResults = [];
+            var seenRefs = new Set();
+            
+            results.forEach(function(result) {
+                if (!seenRefs.has(result.ref)) {
+                    seenRefs.add(result.ref);
+                    uniqueResults.push(result);
+                }
+            });
+            
+            // Sort by score (highest first)
+            uniqueResults.sort(function(a, b) {
+                return b.score - a.score;
+            });
+            
+            results = uniqueResults;
             resultsList.innerHTML = '';
             
             if(results.length > 0) {
