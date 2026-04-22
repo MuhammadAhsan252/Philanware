@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tree Removal Cost Calculator</title>
+  <meta name="description" content="Use our free tree removal cost calculator to get an instant estimate. Enter your tree's size, type, and location to see average removal prices near you." />
+  <meta name="keywords" content="tree removal cost calculator, tree removal cost, how much does tree removal cost, tree removal price estimator, tree cutting cost, tree service cost" />
+  <link rel="canonical" href="https://example.com/tree-removal-cost-calculator" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Tree Removal Cost Calculator | Free Instant Estimate" />
+  <meta property="og:description" content="Get a free instant estimate for tree removal costs. Our calculator factors in tree size, species, location, and complexity." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com/tree-removal-cost-calculator" />
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Tree Removal Cost Calculator",
+    "description": "Free online calculator to estimate tree removal costs based on tree size, species, location complexity and additional services.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "TreeCost Pro"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much does tree removal cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tree removal costs range from $150 to $2,000+ depending on size. Small trees under 30 ft cost $150–$500. Medium trees 30–60 ft cost $500–$1,000. Large trees 60–80 ft cost $1,000–$1,500. Very large trees over 80 ft cost $1,500–$3,000+."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What factors affect tree removal cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Key cost factors include tree height, trunk diameter, species (hardwoods cost more), proximity to structures, terrain/accessibility, local permit requirements, and whether stump grinding is included."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does homeowner insurance cover tree removal?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Homeowner insurance typically covers tree removal only if the tree fell due to a covered peril (storm, lightning) and damaged a structure. Removal of a standing or dead tree is usually not covered."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bark:    #2C1A0E;
+      --moss:    #3B5E2B;
+      --leaf:    #6B9E3C;
+      --sage:    #A8C48A;
+      --cream:   #F7F3EC;
+      --sand:    #E8DFC8;
+      --gold:    #C8922A;
+      --rust:    #A0522D;
+      --white:   #FFFFFF;
+      --shadow:  rgba(44,26,14,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--bark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      background: var(--bark);
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px 80px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 120% 80% at 50% 110%, var(--moss) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 40% at 20% -10%, var(--gold) 0%, transparent 55%);
+      opacity: 0.45;
+    }
+    .hero-rings {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .hero-rings circle {
+      fill: none;
+      stroke: rgba(255,255,255,0.04);
+    }
+    .badge {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      max-width: 720px;
+      position: relative;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--sage);
+    }
+    .hero p {
+      color: rgba(255,255,255,0.72);
+      font-size: 1.05rem;
+      font-weight: 300;
+      max-width: 520px;
+      margin-top: 16px;
+      position: relative;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 32px;
+      position: relative;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      color: var(--gold);
+    }
+    .hero-stat span {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── CALCULATOR CARD ── */
+    .calc-wrapper {
+      margin-top: -48px;
+      padding-bottom: 64px;
+    }
+    .calc-card {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 8px 48px var(--shadow), 0 2px 8px rgba(0,0,0,0.06);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 768px) {
+      .calc-card { grid-template-columns: 1fr; }
+    }
+
+    .calc-inputs {
+      padding: 44px 40px;
+      border-right: 1px solid var(--sand);
+    }
+    @media (max-width: 768px) {
+      .calc-inputs { border-right: none; border-bottom: 1px solid var(--sand); padding: 32px 24px; }
+    }
+    .calc-inputs h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 28px;
+      color: var(--bark);
+    }
+
+    .field { margin-bottom: 22px; }
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--moss);
+      margin-bottom: 8px;
+    }
+    .field select,
+    .field input[type="range"] {
+      width: 100%;
+    }
+    .field select {
+      appearance: none;
+      background: var(--cream) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233B5E2B' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+      border: 1.5px solid var(--sand);
+      border-radius: 10px;
+      padding: 11px 40px 11px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--bark);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .field select:focus { outline: none; border-color: var(--leaf); }
+
+    /* Range slider */
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(to right, var(--leaf) 0%, var(--leaf) var(--pct, 50%), var(--sand) var(--pct, 50%));
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 3px solid var(--leaf);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #999;
+      margin-top: 6px;
+    }
+    .range-value {
+      font-weight: 600;
+      color: var(--moss);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    /* Checkbox grid */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+    }
+    .check-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--leaf);
+      cursor: pointer;
+    }
+    .check-item span {
+      font-size: 0.88rem;
+    }
+
+    /* ── RESULTS PANEL ── */
+    .calc-results {
+      padding: 44px 40px;
+      background: linear-gradient(160deg, #f9f6f0 0%, var(--cream) 100%);
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 768px) { .calc-results { padding: 32px 24px; } }
+
+    .calc-results h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 24px;
+    }
+
+    .price-display {
+      background: var(--bark);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .price-display::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 120%, var(--moss), transparent);
+      opacity: 0.5;
+    }
+    .price-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      position: relative;
+      z-index: 1;
+    }
+    .price-range {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      margin: 8px 0 4px;
+      position: relative;
+      z-index: 1;
+      transition: all 0.4s;
+    }
+    .price-avg {
+      font-size: 0.88rem;
+      color: var(--sage);
+      position: relative;
+      z-index: 1;
+    }
+
+    .breakdown {
+      flex: 1;
+    }
+    .breakdown h3 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--moss);
+      margin-bottom: 14px;
+    }
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--sand);
+      font-size: 0.9rem;
+      animation: fadeIn 0.3s ease;
+    }
+    .breakdown-item:last-child { border-bottom: none; }
+    .breakdown-item .item-name { color: #666; }
+    .breakdown-item .item-cost { font-weight: 600; color: var(--bark); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .cta-btn {
+      display: block;
+      width: 100%;
+      background: var(--leaf);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+      text-align: center;
+    }
+    .cta-btn:hover { background: var(--moss); transform: translateY(-1px); }
+
+    /* ── CONTENT SECTIONS ── */
+    .section { padding: 72px 0; }
+    .section-alt { background: var(--white); }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--bark);
+      line-height: 1.2;
+    }
+    .section-header p {
+      color: #777;
+      max-width: 560px;
+      margin: 14px auto 0;
+      font-size: 1rem;
+    }
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: var(--leaf);
+      margin: 16px auto;
+      border-radius: 2px;
+    }
+
+    /* Cost table */
+    .cost-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+    }
+    .cost-table thead th {
+      background: var(--bark);
+      color: var(--white);
+      padding: 14px 18px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .cost-table thead th:first-child { border-radius: 10px 0 0 0; }
+    .cost-table thead th:last-child { border-radius: 0 10px 0 0; }
+    .cost-table tbody tr { transition: background 0.15s; }
+    .cost-table tbody tr:hover { background: var(--cream); }
+    .cost-table tbody td {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--sand);
+      color: var(--bark);
+    }
+    .cost-table tbody td:first-child { font-weight: 600; }
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .pill-low  { background: #e8f5e9; color: #2e7d32; }
+    .pill-mid  { background: #fff8e1; color: #f57f17; }
+    .pill-high { background: #fce4ec; color: #c62828; }
+
+    /* Factor cards */
+    .factors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .factor-card {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 26px 22px;
+      border-left: 4px solid var(--leaf);
+    }
+    .factor-icon {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+    .factor-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+    .factor-card p {
+      font-size: 0.88rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* FAQ */
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid var(--sand);
+    }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 20px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--bark);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .faq-q .faq-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--sand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.3s;
+    }
+    .faq-item.open .faq-q .faq-icon { background: var(--leaf); color: white; transform: rotate(45deg); }
+    .faq-a {
+      font-size: 0.93rem;
+      color: #555;
+      line-height: 1.7;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s;
+      padding: 0;
+    }
+    .faq-item.open .faq-a { max-height: 400px; padding-bottom: 20px; }
+
+    /* Tips */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .tip-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 2px 16px var(--shadow);
+    }
+    .tip-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--sand);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .tip-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .tip-card p { font-size: 0.88rem; color: #666; }
+
+    /* Footer */
+    footer {
+      background: var(--bark);
+      color: rgba(255,255,255,0.55);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 0.82rem;
+    }
+    footer strong { color: var(--sage); }
+
+    /* Utility */
+    .text-center { text-align: center; }
+    .mt-8 { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .highlight { color: var(--leaf); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<header class="hero" role="banner">
+  <svg class="hero-rings" viewBox="0 0 900 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <circle cx="450" cy="520" r="300"/>
+    <circle cx="450" cy="520" r="400"/>
+    <circle cx="450" cy="520" r="500"/>
+    <circle cx="450" cy="520" r="600"/>
+    <circle cx="80"  cy="30"  r="120"/>
+    <circle cx="820" cy="20"  r="160"/>
+  </svg>
+  <span class="badge">Free Estimate Tool · 2026</span>
+  <h1>Tree Removal <em>Cost Calculator</em></h1>
+  <p>Get an instant, accurate estimate for any tree — small, large, or hazardous — in seconds.</p>
+  <div class="hero-stats" role="list" aria-label="Key statistics">
+    <div class="hero-stat" role="listitem">
+      <strong>$150</strong>
+      <span>Minimum cost</span>
+    </div>
+    <div class="hero-stat" role="listitem">
+      <strong>$871</strong>
+      <span>National average</span>
+    </div>
+    <div class="hero-stat" role="listitem">
+      <strong>$3,500+</strong>
+      <span>Large tree max</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════ CALCULATOR ═══════════════════════════ -->
+<main>
+<div class="calc-wrapper">
+  <div class="container">
+    <section class="calc-card" aria-labelledby="calc-heading">
+      <!-- INPUTS -->
+      <div class="calc-inputs">
+        <h2 id="calc-heading">Enter Tree Details</h2>
+
+        <div class="field">
+          <label for="tree-height">Tree Height</label>
+          <input type="range" id="tree-height" min="10" max="120" value="40" step="5" aria-label="Tree height in feet" />
+          <div class="range-labels"><span>10 ft</span><span>120 ft</span></div>
+          <div class="range-value" id="height-display">40 ft</div>
+        </div>
+
+        <div class="field">
+          <label for="tree-species">Tree Species / Type</label>
+          <select id="tree-species" aria-label="Select tree species">
+            <option value="1.0">Pine / Evergreen</option>
+            <option value="1.1">Oak / Hardwood</option>
+            <option value="1.0">Maple</option>
+            <option value="1.2">Palm Tree</option>
+            <option value="0.9">Birch / Poplar</option>
+            <option value="1.15">Eucalyptus</option>
+            <option value="0.85">Dead Tree (any species)</option>
+            <option value="1.0">Other / Unknown</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="trunk-diameter">Trunk Diameter (inches)</label>
+          <input type="range" id="trunk-diameter" min="4" max="60" value="18" step="2" aria-label="Trunk diameter in inches" />
+          <div class="range-labels"><span>4"</span><span>60"</span></div>
+          <div class="range-value" id="diameter-display">18 inches</div>
+        </div>
+
+        <div class="field">
+          <label for="location-type">Location / Accessibility</label>
+          <select id="location-type" aria-label="Select location accessibility">
+            <option value="1.0">Open yard — easy access</option>
+            <option value="1.2">Near fence or structure</option>
+            <option value="1.35">Near power lines</option>
+            <option value="1.5">Close to house / building</option>
+            <option value="1.4">Steep slope / difficult terrain</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Additional Services</label>
+          <div class="checkbox-grid">
+            <label class="check-item">
+              <input type="checkbox" id="stump" value="250" />
+              <span>Stump grinding</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="haul" value="100" />
+              <span>Debris haul-away</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="log" value="75" />
+              <span>Log splitting</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="permit" value="60" />
+              <span>Permit fee</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="emergency" value="300" />
+              <span>Emergency / same-day</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="root" value="200" />
+              <span>Root removal</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="calc-results" aria-live="polite" aria-label="Cost estimate results">
+        <h2>Your Estimate</h2>
+
+        <div class="price-display">
+          <div class="price-label">Estimated Cost Range</div>
+          <div class="price-range" id="price-range">$350 – $650</div>
+          <div class="price-avg" id="price-avg">Average: $500</div>
+        </div>
+
+        <div class="breakdown">
+          <h3>Cost Breakdown</h3>
+          <div id="breakdown-list"></div>
+        </div>
+
+        <a href="#get-quotes" class="cta-btn" role="button">Get Free Quotes from Local Arborists →</a>
+
+        <p style="font-size:0.75rem;color:#999;margin-top:12px;text-align:center;">
+          Estimates are for informational purposes. Actual costs vary by region and contractor. Always get 3+ quotes.
+        </p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ COST TABLE ═══════════════════════════ -->
+<section class="section section-alt" aria-labelledby="cost-table-heading">
+  <div class="container">
+    <div class="section-header">
+      <h2 id="cost-table-heading">Tree Removal Cost by Size</h2>
+      <div class="divider"></div>
+      <p>Average prices across the US in 2026, based on contractor surveys and homeowner reports.</p>
+    </div>
+    <div style="overflow-x:auto;border-radius:12px;box-shadow:0 4px 24px var(--shadow);">
+      <table class="cost-table" aria-label="Tree removal cost by size table">
+        <thead>
+          <tr>
+            <th>Tree Size</th>
+            <th>Height</th>
+            <th>Typical Cost Range</th>
+            <th>Average Cost</th>
+            <th>Complexity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Small Tree</td>
+            <td>Under 30 ft</td>
+            <td>$150 – $500</td>
+            <td>$325</td>
+            <td><span class="pill pill-low">Low</span></td>
+          </tr>
+          <tr>
+            <td>Medium Tree</td>
+            <td>30 – 60 ft</td>
+            <td>$500 – $1,000</td>
+            <td>$750</td>
+            <td><span class="pill pill-mid">Moderate</span></td>
+          </tr>
+          <tr>
+            <td>Large Tree</td>
+            <td>60 – 80 ft</td>
+            <td>$1,000 – $1,800</td>
+            <td>$1,400</td>
+            <td><span class="pill pill-high">High</span></td>
+          </tr>
+          <tr>
+            <td>Very Large Tree</td>
+            <td>80 – 100 ft</td>
+            <td>$1,500 – $2,500</td>
+            <td>$2,000</td>
+            <td><span class="pill pill-high">High</span></td>
+          </tr>
+          <tr>
+            <td>Extra Large Tree</td>
+            <td>Over 100 ft</td>
+            <td>$2,500 – $5,000+</td>
+            <td>$3,500+</td>
+            <td><span class="pill pill-high">Very High</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ COST FACTORS ═══════════════════════════ -->
+<section class="section" aria-labelledby="factors-heading">
+  <div class="container">
+    <div class="section-header">
+      <h2 id="factors-heading">What Affects Tree Removal Cost?</h2>
+      <div class="divider"></div>
+      <p>These six factors have the biggest impact on your final quote.</p>
+    </div>
+    <div class="factors-grid">
+      <article class="factor-card">
+        <div class="factor-icon" aria-hidden="true">📏</div>
+        <h3>Tree Height & Size</h3>
+        <p>The single biggest cost driver. Taller trees require more time, crew members, and specialized equipment like bucket trucks or cranes.</p>
+      </article>
+      <article class="factor-card">
+        <div class="factor-icon" aria-hidden="true">🌲</div>
+        <h3>Species & Wood Density</h3>
+        <p>Hardwoods like oak take longer to cut than softwoods. Palm trees require specialized techniques. Dead trees can be cheaper but less predictable.</p>
+      </article>
+      <article class="factor-card">
+        <div class="factor-icon" aria-hidden="true">📍</div>
+        <h3>Location & Accessibility</h3>
+        <p>Trees near power lines, buildings, or on steep slopes require extra care and rigging — typically adding 20–50% to the base cost.</p>
+      </article>
+      <article class="factor-card">
+        <div class="factor-icon" aria-hidden="true">🌀</div>
+        <h3>Number of Trunks</h3>
+        <p>Multi-stemmed trees or trees with multiple large branches require more cuts and rigging work, increasing both time and labour.</p>
+      </article>
+      <article class="factor-card">
+        <div class="factor-icon" aria-hidden="true">🏙️</div>
+        <h3>Your Location / Region</h3>
+        <p>Urban areas and high cost-of-living regions command 30–60% higher rates than rural markets. Weather and seasonal demand also plays a role.</p>
+      </article>
+      <article class="factor-card">
+        <div class="factor-icon" aria-hidden="true">🔧</div>
+        <h3>Additional Services</h3>
+        <p>Stump grinding (+$150–$450), debris haul-away (+$50–$200), and emergency same-day service (+$200–$500) can significantly increase your bill.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ COST BY SPECIES ═══════════════════════════ -->
+<section class="section section-alt" aria-labelledby="species-heading">
+  <div class="container">
+    <div class="section-header">
+      <h2 id="species-heading">Tree Removal Cost by Species</h2>
+      <div class="divider"></div>
+      <p>Species affects density, workload, and equipment requirements.</p>
+    </div>
+    <div style="overflow-x:auto;border-radius:12px;box-shadow:0 4px 24px var(--shadow);">
+      <table class="cost-table" aria-label="Tree removal cost by species">
+        <thead>
+          <tr>
+            <th>Species</th>
+            <th>Typical Range</th>
+            <th>Key Consideration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Oak Tree</td><td>$500 – $2,000</td><td>Dense hardwood, large canopy spread</td></tr>
+          <tr><td>Pine Tree</td><td>$250 – $1,500</td><td>Tall and straight, easier to fell</td></tr>
+          <tr><td>Palm Tree</td><td>$200 – $900</td><td>Requires specialised rigging techniques</td></tr>
+          <tr><td>Maple Tree</td><td>$450 – $1,600</td><td>Wide canopy, moderate hardwood</td></tr>
+          <tr><td>Birch Tree</td><td>$300 – $900</td><td>Softer wood, generally easier removal</td></tr>
+          <tr><td>Eucalyptus</td><td>$500 – $2,500</td><td>Very tall, brittle branches — higher risk</td></tr>
+          <tr><td>Dead Tree</td><td>$75 – $500 less</td><td>Easier to cut but unpredictable structure</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ MONEY-SAVING TIPS ═══════════════════════════ -->
+<section class="section" aria-labelledby="tips-heading">
+  <div class="container">
+    <div class="section-header">
+      <h2 id="tips-heading">5 Ways to Save on Tree Removal</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="tips-grid">
+      <article class="tip-card">
+        <div class="tip-number">01</div>
+        <h3>Get 3+ Competing Quotes</h3>
+        <p>Prices for the same job can vary by 40–60%. Getting multiple quotes is the single most effective way to lower your cost.</p>
+      </article>
+      <article class="tip-card">
+        <div class="tip-number">02</div>
+        <h3>Schedule in Off-Season</h3>
+        <p>Late winter and early spring (before leaves return) is the slow season for arborists. Discounts of 15–25% are common.</p>
+      </article>
+      <article class="tip-card">
+        <div class="tip-number">03</div>
+        <h3>Bundle Multiple Trees</h3>
+        <p>If you have several trees to remove, doing them in one visit reduces per-tree mobilisation costs significantly.</p>
+      </article>
+      <article class="tip-card">
+        <div class="tip-number">04</div>
+        <h3>Keep the Wood</h3>
+        <p>Offer to keep the logs and wood chips. This saves the crew haul-away time and can reduce your quote by $100–$300.</p>
+      </article>
+      <article class="tip-card">
+        <div class="tip-number">05</div>
+        <h3>Check Insurance Coverage</h3>
+        <p>If a storm damaged the tree, your homeowner's insurance may cover some or all of the removal cost. Always file a claim first.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ FAQ ═══════════════════════════ -->
+<section class="section section-alt" aria-labelledby="faq-heading">
+  <div class="container">
+    <div class="section-header">
+      <h2 id="faq-heading">Frequently Asked Questions</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="faq-list" role="list">
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false">
+          How much does tree removal cost on average?
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a">
+          The national average tree removal cost in 2026 is approximately $871, with most homeowners spending between $250 and $1,500. Small trees under 30 ft average $325, while very large trees over 80 ft can cost $2,000–$5,000 or more. Location, species, and accessibility are the biggest variables.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false">
+          Does homeowner insurance cover tree removal?
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a">
+          Homeowner insurance typically covers tree removal only when a tree falls due to a covered peril (storm, lightning, wind) and damages a covered structure like your home, fence, or car. Removal of a standing hazardous tree or a dead tree is generally not covered unless your policy has specific riders.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false">
+          Do I need a permit to remove a tree?
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a">
+          Permit requirements vary significantly by city and state. Many municipalities require permits for removing trees above a certain trunk diameter (commonly 6–12 inches DBH) or trees in protected zones. Your arborist should know local regulations, but always check with your local authority. Permit fees typically range from $50–$150.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false">
+          How long does tree removal take?
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a">
+          A small tree can be removed in under an hour. A medium tree typically takes 2–4 hours. Large or complex trees — especially those near structures or power lines — can take a full day or more. Emergency removals after storms often take longer due to the unpredictable nature of fallen limbs.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false">
+          Should I remove a tree myself to save money?
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a">
+          DIY tree removal is possible for very small, isolated trees, but it is extremely dangerous and not recommended for trees taller than 15 feet. Without proper equipment and training, the risk of injury, property damage, and liability is significant. Professional arborists carry insurance — if something goes wrong with a DIY removal, you're fully liable.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false">
+          Is stump removal included in tree removal cost?
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a">
+          No — stump grinding or removal is almost always quoted separately. Stump grinding costs $150–$450 on average depending on stump diameter. Complete stump and root removal costs more ($300–$700+) and is only necessary if you plan to replant or pave over the area.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ GET QUOTES ═══════════════════════════ -->
+<section class="section" id="get-quotes" aria-labelledby="quotes-heading">
+  <div class="container" style="text-align:center;max-width:600px;">
+    <h2 id="quotes-heading" style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.5rem);">
+      Ready to Get Accurate Quotes?
+    </h2>
+    <div class="divider"></div>
+    <p style="color:#666;margin-bottom:32px;">Compare quotes from licensed, insured arborists in your area. Takes less than 2 minutes.</p>
+    <form action="#" method="get" aria-label="Get quotes form" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <input
+        type="text"
+        placeholder="Enter your ZIP code"
+        name="zip"
+        aria-label="ZIP code"
+        style="flex:1;min-width:180px;padding:14px 18px;border:1.5px solid var(--sand);border-radius:10px;font-size:1rem;font-family:'DM Sans',sans-serif;color:var(--bark);background:var(--white);"
+      />
+      <button
+        type="submit"
+        style="background:var(--leaf);color:white;border:none;border-radius:10px;padding:14px 28px;font-size:1rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;"
+      >
+        Find Arborists →
+      </button>
+    </form>
+    <p style="font-size:0.78rem;color:#aaa;margin-top:16px;">Free service · No obligation · Licensed & insured pros only</p>
+  </div>
+</section>
+</main>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer role="contentinfo">
+  <p><strong>TreeCost Pro</strong> — Free Tree Removal Cost Calculator</p>
+  <p class="mt-8">Estimates are based on national averages and should be used for planning purposes only. Always obtain professional quotes before proceeding.</p>
+  <p class="mt-8">© 2026 TreeCost Pro · All rights reserved</p>
+</footer>
+
+<script>
+  // ── CALCULATOR LOGIC ──
+  const heightInput    = document.getElementById('tree-height');
+  const diameterInput  = document.getElementById('trunk-diameter');
+  const speciesSelect  = document.getElementById('tree-species');
+  const locationSelect = document.getElementById('location-type');
+  const heightDisplay  = document.getElementById('height-display');
+  const diamDisplay    = document.getElementById('diameter-display');
+  const priceRange     = document.getElementById('price-range');
+  const priceAvg       = document.getElementById('price-avg');
+  const breakdownList  = document.getElementById('breakdown-list');
+  const addons         = ['stump','haul','log','permit','emergency','root'];
+
+  const addonLabels = {
+    stump:     'Stump grinding',
+    haul:      'Debris haul-away',
+    log:       'Log splitting',
+    permit:    'Permit fee',
+    emergency: 'Emergency service',
+    root:      'Root removal'
+  };
+
+  function calcBase(height, diameter) {
+    // Base rate: grows with height^1.4 and diameter linearly
+    const h = parseFloat(height);
+    const d = parseFloat(diameter);
+    const base = 80 + Math.pow(h, 1.4) * 0.55 + d * 4.5;
+    return base;
+  }
+
+  function updateSlider(input) {
+    const min = parseFloat(input.min);
+    const max = parseFloat(input.max);
+    const val = parseFloat(input.value);
+    const pct = ((val - min) / (max - min)) * 100;
+    input.style.setProperty('--pct', pct + '%');
+  }
+
+  function updateCalc() {
+    const h = parseFloat(heightInput.value);
+    const d = parseFloat(diameterInput.value);
+    const speciesMul = parseFloat(speciesSelect.value);
+    const locMul     = parseFloat(locationSelect.value);
+
+    heightDisplay.textContent  = h + ' ft';
+    diamDisplay.textContent    = d + ' inches';
+    updateSlider(heightInput);
+    updateSlider(diameterInput);
+
+    const base = calcBase(h, d);
+    const adjusted = base * speciesMul * locMul;
+    const low  = Math.round(adjusted * 0.75 / 25) * 25;
+    const high = Math.round(adjusted * 1.25 / 25) * 25;
+    const avg  = Math.round((low + high) / 2 / 25) * 25;
+
+    let addonTotal = 0;
+    const breakdown = [
+      { name: 'Base removal cost', low, high }
+    ];
+
+    addons.forEach(id => {
+      const el = document.getElementById(id);
+      if (el.checked) {
+        const cost = parseFloat(el.value);
+        addonTotal += cost;
+        breakdown.push({ name: addonLabels[id], low: cost, high: cost });
+      }
+    });
+
+    const totalLow  = low  + addonTotal;
+    const totalHigh = high + addonTotal;
+    const totalAvg  = avg  + addonTotal;
+
+    priceRange.textContent = `$${totalLow.toLocaleString()} – $${totalHigh.toLocaleString()}`;
+    priceAvg.textContent   = `Average: $${totalAvg.toLocaleString()}`;
+
+    // Render breakdown
+    breakdownList.innerHTML = breakdown.map(item => `
+      <div class="breakdown-item">
+        <span class="item-name">${item.name}</span>
+        <span class="item-cost">$${item.low.toLocaleString()}${item.low !== item.high ? ' – $'+item.high.toLocaleString() : ''}</span>
+      </div>
+    `).join('');
+
+    if (addonTotal > 0) {
+      breakdownList.innerHTML += `
+        <div class="breakdown-item" style="font-weight:700;color:var(--bark);">
+          <span class="item-name" style="color:var(--bark);">Total Estimate</span>
+          <span class="item-cost" style="color:var(--moss);">$${totalLow.toLocaleString()} – $${totalHigh.toLocaleString()}</span>
+        </div>`;
+    }
+  }
+
+  // Event listeners
+  [heightInput, diameterInput].forEach(el => {
+    el.addEventListener('input', updateCalc);
+  });
+  [speciesSelect, locationSelect].forEach(el => {
+    el.addEventListener('change', updateCalc);
+  });
+  addons.forEach(id => {
+    document.getElementById(id).addEventListener('change', updateCalc);
+  });
+
+  // Initial render
+  updateSlider(heightInput);
+  updateSlider(diameterInput);
+  updateCalc();
+
+  // ── FAQ ACCORDION ──
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      // close all
+      document.querySelectorAll('.faq-item.open').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>
+</body>
+</html>
